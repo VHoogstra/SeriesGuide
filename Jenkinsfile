@@ -18,7 +18,7 @@ try {
 
         stage('Clean Build') {
                 dir("app") {
-                    bat 'ls -al'
+                    bat 'dir'
                     bat './gradlew clean'
                 }
         }

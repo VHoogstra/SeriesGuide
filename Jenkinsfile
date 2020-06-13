@@ -10,11 +10,12 @@ try {
         stage('Dependencies') {
                 bat 'npm install -g react-native-cli'
                 bat 'npm install'
-                bat 'react-native link'
+                bat 'php -v'
                 bat 'export JAVA_HOME=/opt/jdk1.8.0_201'
                 bat 'export JRE_HOME=/opt/jdk1.8.0_201/jre'
                 bat 'export PATH=$PATH:/opt/jdk1.8.0_201/bin:/opt/jdk1.8.0_201/jre/bin'
                 bat 'echo $JAVA_HOME'
+
         }
 
         stage('Clean Build') {

@@ -17,8 +17,7 @@ try {
         }
 
         stage('Clean Build') {
-                dir("android") {
-                    bat "pwd"
+                dir("app") {
                     bat 'ls -al'
                     bat './gradlew clean'
                 }

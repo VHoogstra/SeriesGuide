@@ -54,7 +54,7 @@ import org.json.JSONTokener;
  * request actions from an extension.
  *
  * <h3>Subclassing {@link SeriesGuideExtension}</h3>
- *
+ * <p>
  * Subclasses must at least implement {@link #onRequest(int, Episode)} or {@link #onRequest(int, Movie)},
  * which is called when SeriesGuide requests actions to display for an episode or movie. Do not
  * perform long running operations here as the user will get frustrated while waiting for the
@@ -71,7 +71,7 @@ import org.json.JSONTokener;
  * integrate with the platforms job scheduler.
  *
  * <h3>Registering your extension</h3>
- *
+ * <p>
  * An extension is exposed through a broadcast receiver that SeriesGuide and other apps interact
  * with via {@linkplain Context#sendBroadcast(Intent) broadcast intents}. This receiver enqueues
  * requests from subscribers to be processed by this service. A simple receiver can be implemented
@@ -106,7 +106,7 @@ import org.json.JSONTokener;
  * </ul>
  *
  * <h3>Example</h3>
- *
+ * <p>
  * Below is an example extension declaration in the manifest:
  *
  * <pre class="prettyprint">
@@ -126,7 +126,7 @@ import org.json.JSONTokener;
  *     android:exported="true"
  *     android:permission="android.permission.BIND_JOB_SERVICE" /&gt;
  * </pre>
- *
+ * <p>
  * If a <code>settingsActivity</code> meta-data element is present, an activity with the given
  * component name should be defined and exported in the application's manifest as well. SeriesGuide
  * will set the {@link #EXTRA_FROM_SERIESGUIDE_SETTINGS} extra to true in the launch intent for this
@@ -137,7 +137,7 @@ import org.json.JSONTokener;
  *     android:label="@string/title_settings"
  *     android:exported="true" /&gt;
  * </pre>
- *
+ * <p>
  * Finally, below are a simple example {@link SeriesGuideExtensionReceiver} and
  * {@link SeriesGuideExtension} subclass that publishes actions for episodes performing a simple
  * Google search:
@@ -205,7 +205,7 @@ public abstract class SeriesGuideExtension extends JobIntentService {
      * Call from your default constructor.
      *
      * @param name Gives the extension a name. This is not user-visible, but will be used to store
-     * preferences and state for the extension.
+     *             preferences and state for the extension.
      */
     public SeriesGuideExtension(String name) {
         this.name = name;
@@ -225,9 +225,9 @@ public abstract class SeriesGuideExtension extends JobIntentService {
      * {@link #SeriesGuideExtension(String)} constructor. This static method is useful for exposing
      * extension preferences to other application components such as a settings activity.
      *
-     * @param context The context; can be an application context.
+     * @param context       The context; can be an application context.
      * @param extensionName The source name, provided in the {@link #SeriesGuideExtension(String)}
-     * constructor.
+     *                      constructor.
      */
     protected static SharedPreferences getSharedPreferences(Context context, String extensionName) {
         return context.getSharedPreferences(PREF_PREFIX + extensionName, 0);
@@ -290,7 +290,7 @@ public abstract class SeriesGuideExtension extends JobIntentService {
      * display using {@link #publishAction(Action)}.
      *
      * @param episodeIdentifier The episode identifier the extension should submit with the action
-     * it wants to publish.
+     *                          it wants to publish.
      */
     protected void onRequest(int episodeIdentifier, Episode episode) {
         // do nothing by default, may choose to either supply episode or movie actions
@@ -301,7 +301,7 @@ public abstract class SeriesGuideExtension extends JobIntentService {
      * display using {@link #publishAction(Action)}.
      *
      * @param movieIdentifier The movie identifier the extension should submit with the action it
-     * wants to publish.
+     *                        wants to publish.
      */
     @SuppressWarnings("UnusedParameters")
     protected void onRequest(int movieIdentifier, Movie movie) {
@@ -333,17 +333,15 @@ public abstract class SeriesGuideExtension extends JobIntentService {
             handleSubscribe(
                     intent.getParcelableExtra(EXTRA_SUBSCRIBER_COMPONENT),
                     intent.getStringExtra(EXTRA_TOKEN));
-        } else if (ACTION_UPDATE.equals(action)) {
+        } else if (ACTION_UPDATE.equals(action) && intent.hasExtra(EXTRA_ENTITY_IDENTIFIER)) {
             // subscriber requests an updated action
-            if (intent.hasExtra(EXTRA_ENTITY_IDENTIFIER)) {
-                int version = intent.getIntExtra(EXTRA_VERSION, 1);
-                if (intent.hasExtra(EXTRA_EPISODE)) {
-                    handleEpisodeRequest(intent.getIntExtra(EXTRA_ENTITY_IDENTIFIER, 0),
-                            intent.getBundleExtra(EXTRA_EPISODE), version);
-                } else if (intent.hasExtra(EXTRA_MOVIE)) {
-                    handleMovieRequest(intent.getIntExtra(EXTRA_ENTITY_IDENTIFIER, 0),
-                            intent.getBundleExtra(EXTRA_MOVIE), version);
-                }
+            int version = intent.getIntExtra(EXTRA_VERSION, 1);
+            if (intent.hasExtra(EXTRA_EPISODE)) {
+                handleEpisodeRequest(intent.getIntExtra(EXTRA_ENTITY_IDENTIFIER, 0),
+                        intent.getBundleExtra(EXTRA_EPISODE), version);
+            } else if (intent.hasExtra(EXTRA_MOVIE)) {
+                handleMovieRequest(intent.getIntExtra(EXTRA_ENTITY_IDENTIFIER, 0),
+                        intent.getBundleExtra(EXTRA_MOVIE), version);
             }
         }
     }

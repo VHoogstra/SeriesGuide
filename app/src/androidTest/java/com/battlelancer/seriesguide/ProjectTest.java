@@ -23,6 +23,8 @@ import com.battlelancer.seriesguide.provider.RoomDatabaseTestHelper;
 import com.battlelancer.seriesguide.provider.SgRoomDatabase;
 import com.battlelancer.seriesguide.provider.SqliteDatabaseTestHelper;
 import com.battlelancer.seriesguide.provider.SqliteTestDbOpenHelper;
+import com.battlelancer.seriesguide.ui.episodes.EpisodeFlags;
+import com.battlelancer.seriesguide.ui.episodes.EpisodeTools;
 import com.uwetrottmann.thetvdb.entities.Episode;
 import java.io.IOException;
 import org.junit.Rule;
@@ -174,6 +176,18 @@ public class ProjectTest {
         assertThat(time).isLessThan(7000);
     }
 
+
+    @Test
+    public void isCollected() {
+        assertThat(EpisodeTools.isCollected(EpisodeFlags.WATCHED)).isTrue();
+    }
+
+    @Test
+    public void isWatched() {
+        assertThat(EpisodeTools.isWatched(EpisodeFlags.WATCHED)).isTrue();
+        assertThat(EpisodeTools.isWatched(EpisodeFlags.SKIPPED)).isFalse();
+        assertThat(EpisodeTools.isWatched(EpisodeFlags.UNWATCHED)).isFalse();
+    }
 
 
 }

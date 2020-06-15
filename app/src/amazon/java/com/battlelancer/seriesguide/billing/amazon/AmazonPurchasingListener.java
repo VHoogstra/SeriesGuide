@@ -30,11 +30,7 @@ public class AmazonPurchasingListener implements PurchasingListener {
         final UserDataResponse.RequestStatus status = response.getRequestStatus();
         switch (status) {
             case SUCCESSFUL: {
-                Timber.d("onUserDataResponse: get user id (%s), marketplace (%s)",
-                        response.getUserData().getUserId(),
-                        response.getUserData().getMarketplace());
-                iapManager.setAmazonUserId(response.getUserData().getUserId(),
-                        response.getUserData().getMarketplace());
+              wood(response);
                 break;
             }
             case FAILED:
@@ -46,6 +42,13 @@ public class AmazonPurchasingListener implements PurchasingListener {
         }
     }
 
+    public void wood(UserDataResponse response){
+        Timber.d("onUserDataResponse: get user id (%s), marketplace (%s)",
+                response.getUserData().getUserId(),
+                response.getUserData().getMarketplace());
+        iapManager.setAmazonUserId(response.getUserData().getUserId(),
+                response.getUserData().getMarketplace());
+    }
     /**
      * Callback for {@link PurchasingService#getProductData}. Enables or disables purchases
      * according to availability.

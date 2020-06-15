@@ -61,6 +61,7 @@ public class RemoveCloudAccountDialogFragment extends AppCompatDialogFragment {
             this.hexagonTools = SgApp.getServicesComponent(context).hexagonTools();
         }
 
+        public static final String REMOVEACCOUNT = "remove account";
         @Override
         protected Boolean doInBackground(Void... params) {
             // remove account from hexagon
@@ -71,7 +72,7 @@ public class RemoveCloudAccountDialogFragment extends AppCompatDialogFragment {
                 }
                 accountService.deleteData().execute();
             } catch (IOException e) {
-                Errors.logAndReportHexagon("remove account", e);
+                Errors.logAndReportHexagon(REMOVEACCOUNT, e);
                 return false;
             }
 
@@ -82,7 +83,7 @@ public class RemoveCloudAccountDialogFragment extends AppCompatDialogFragment {
             try {
                 Tasks.await(task);
             } catch (Exception e) {
-                Errors.logAndReport("remove account", HexagonAuthError.build("remove account", e));
+                Errors.logAndReport(REMOVEACCOUNT, HexagonAuthError.build(REMOVEACCOUNT, e));
                 return false;
             }
 

@@ -98,8 +98,8 @@ public class JsonExportTask extends AsyncTask<Void, Integer, Integer> {
     /**
      * Same as {@link JsonExportTask} but allows to set parameters.
      *
-     * @param isFullDump Whether to also export meta-data like descriptions, ratings, actors, etc.
-     * Increases file size about 2-4 times.
+     * @param isFullDump       Whether to also export meta-data like descriptions, ratings, actors, etc.
+     *                         Increases file size about 2-4 times.
      * @param isAutoBackupMode Whether to run an auto backup, also shows no result toasts.
      */
     public JsonExportTask(Context context, OnTaskProgressListener progressListener,
@@ -125,40 +125,39 @@ public class JsonExportTask extends AsyncTask<Void, Integer, Integer> {
                         e.getClass().getSimpleName() + ": " + e.getMessage());
                 return ERROR;
             }
-        } else {
-            // Manual backup mode.
+        }
+        // Manual backup mode.
 
+        if (isCancelled()) {
+            return ERROR;
+        }
+
+        int result = SUCCESS;
+        if (type == null || type == BACKUP_SHOWS) {
+            result = exportData(BACKUP_SHOWS);
+            if (result != SUCCESS) {
+                return result;
+            }
             if (isCancelled()) {
                 return ERROR;
             }
-
-            int result = SUCCESS;
-            if (type == null || type == BACKUP_SHOWS) {
-                result = exportData(BACKUP_SHOWS);
-                if (result != SUCCESS) {
-                    return result;
-                }
-                if (isCancelled()) {
-                    return ERROR;
-                }
-            }
-
-            if (type == null || type == BACKUP_LISTS) {
-                result = exportData(BACKUP_LISTS);
-                if (result != SUCCESS) {
-                    return result;
-                }
-                if (isCancelled()) {
-                    return ERROR;
-                }
-            }
-
-            if (type == null || type == BACKUP_MOVIES) {
-                result = exportData(BACKUP_MOVIES);
-            }
-
-            return result;
         }
+
+        if (type == null || type == BACKUP_LISTS) {
+            result = exportData(BACKUP_LISTS);
+            if (result != SUCCESS) {
+                return result;
+            }
+            if (isCancelled()) {
+                return ERROR;
+            }
+        }
+
+        if (type == null || type == BACKUP_MOVIES) {
+            result = exportData(BACKUP_MOVIES);
+        }
+
+        return result;
     }
 
     @Override
